@@ -4,13 +4,13 @@ import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.router.js"
 
-dotenv.config();
+//---------------------------------------------------------------------
+dotenv.config();   //for using the data from .env file for db
 
 const app = express();
-
 app.use(express.json());  //this is gonna allow the json data to the server
 
-
+//----------------connectint to database-----------------------------
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -20,14 +20,18 @@ mongoose
     console.log(err);
   });
 
+//-----------------------------------------------------------------------
+
 app.get("/test", (req, res) => {
   res.send(`<h1>Hi this is server</h1>`);
 });
 
+//----------------------------server routes from the routes folder----------------------------------------
 
 app.use("/server/user", userRouter);
 app.use("/server/auth", authRouter)
 
+//------------------------------------Middleware-------------------------------
 
 //middleware-- for error handling
 app.use((err, req, res, next)=>{    //next is for going to the next middleware
@@ -39,7 +43,7 @@ app.use((err, req, res, next)=>{    //next is for going to the next middleware
       message,                                  //whats the error message we're getting
     });
 })
-//--------------------------------
+//------------------------------------------------------------------------
 
 const port = 8000;
 app.listen(port, () => {
