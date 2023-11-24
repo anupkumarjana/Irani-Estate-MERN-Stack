@@ -31,6 +31,14 @@ app.get("/test", (req, res) => {
 app.use("/server/user", userRouter);
 app.use("/server/auth", authRouter);
 
+
+//------------------------------------------------------------------------
+
+const port = 8000;
+app.listen(port, () => {
+  console.log("The server is running on 8000");
+});
+
 //------------------------------------Middleware-------------------------------
 
 //middleware-- for error handling
@@ -44,10 +52,4 @@ app.use((err, req, res, next) => {
     statusCode, //whats the error status code
     message, //whats the error message we're getting
   });
-});
-//------------------------------------------------------------------------
-
-const port = 8000;
-app.listen(port, () => {
-  console.log("The server is running on 8000");
 });

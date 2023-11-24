@@ -21,21 +21,19 @@ export const signin = async (req, res, next) => {
     //we're chcking if the user is already registerd or not
     const validUser = await User.findOne({ email });
     //if not a register user then-->
-    if (!validUser) {
-      return next(errorHandler(404, "User not found!")); //this error handler is coming from utils/error.js
-    }
-    //checking the password is valid or not
+    if (!validUser) return next(errorHandler(404, 'User not found!')); //this error handler is coming from utils/error.js
+
+    //if the user is valid/registered then checking the password is valid or not
     const validPassword = bcrypt.compareSync(password, validUser.password);
-    if (!validPassword) {
-      return next(errorHandler(404, "Wrong Credentials!"));
-    }
+    if (!validPassword) return next(errorHandler(401, "Wrong Credentials!"));
+
     const token = Jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
-    const { password: passw, ...restinfo } = validUser._doc;  //here we're removing the password from the valid user for security purpuses
+    const { password: passw, ...restinfo } = validUser._doc; //here we're removing the password from the valid user for security purpuses
     res
-      .cookie("access_token", token, { httpOnly: true })
-      .status(200)
+      .cookie("access_token", token, { httpOnly: true }) //access_token is the name of cokkie and we passed the cokkie and to make it safe
+      .status(200) //we have done httpOnly true
       .json(restinfo);
   } catch (err) {
-    next(err);
+    next(err); //if there's any error its gonna send by next to our middleware
   }
 };
