@@ -11,6 +11,6 @@ export const signup = async (req, res, next) => {
     await newUser.save();
     res.status(201).json("User created Successfully!");
   } catch (err) {
-    next(error); //this is for--> if the username is not unique then its gonna throw error
+    next(err); //this is for--> if the username is not unique then its gonna throw error
   }
 };
