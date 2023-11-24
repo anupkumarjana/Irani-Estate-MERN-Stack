@@ -39,7 +39,7 @@ export default function Signup() {
       }
       setLoading(false);
       setError(null);
-      navigate('/sign-in');
+      navigate('/sign-in');            //if that is a successfull sign up, we'll show the sign-in page
     } catch (error) {
       setLoading(false);
       setError(error.message);

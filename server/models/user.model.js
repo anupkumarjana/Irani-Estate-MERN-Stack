@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamp: true } //to record the login time we're storing this info
+  { timestamp:true } //to record the login time we're storing this info
 );
 
 const User = mongoose.model("User", userSchema);
