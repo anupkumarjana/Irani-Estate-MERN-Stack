@@ -31,7 +31,6 @@ app.get("/test", (req, res) => {
 app.use("/server/user", userRouter);
 app.use("/server/auth", authRouter);
 
-
 //------------------------------------------------------------------------
 
 const port = 8000;
