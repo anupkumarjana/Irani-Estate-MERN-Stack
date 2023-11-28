@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default:
-        "https://t3.ftcdn.net/jpg/05/26/72/46/240_F_526724677_JpExJ4Kd4nsWjXMFHyPPXhKX7G5DLvuF.jpg",
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
   },
   { timestamp: true } //to record the login time we're storing this info
