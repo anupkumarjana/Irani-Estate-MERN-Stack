@@ -4,6 +4,7 @@ import {
   getStorage,
   uploadBytesResumable,
   ref,
+  getDownloadURL,
 } from "firebase/storage";
 import { app } from "../firebase";
 
@@ -11,9 +12,14 @@ export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser } = useSelector((state) => state.user);
   const [file, setFile] = useState(null);
-  const [filePercentage, setFilePercentage]= useState(0)
-  // console.log(file);
-  console.log((filePercentage));
+  const [filePercentage, setFilePercentage] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  console.log(file);
+  console.log(filePercentage);
+  console.log(formData);
+  console.log(fileUploadError);
 
   useEffect(() => {
     if (file) {
@@ -27,11 +33,24 @@ export default function Profile() {
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on("state_changed", (snpashot) => {
-      const progress = (snpashot.bytesTransferred / snpashot.totalBytes) * 100;
-      // console.log("Upload is" + progress + "% done");
-      setFilePercentage(Math.round(progress))
-    });
+    uploadTask.on(
+      "state_changed",
+      (snpashot) => {
+        const progress =
+          (snpashot.bytesTransferred / snpashot.totalBytes) * 100;
+        // console.log("Upload is" + progress + "% done");
+        setFilePercentage(Math.round(progress));
+      },
+
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData({ ...formData, avatar: downloadURL });
+        });
+      }
+    );
   };
 
   return (
@@ -47,10 +66,24 @@ export default function Profile() {
         />
         <img
           onClick={() => fileRef.current.click()}
-          src={currentUser.avatar}
+          src={formData.avatar || currentUser.avatar}
           alt="profile"
-          className="rounded-full h-24 w0-24 object-cover cursor-pointer self-center mt-2"
+          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
         />
+        <p className="text-sm self-center">
+          {fileUploadError ? (
+            <span className="text-red-700">
+              Error Image upload (image must be less than 2 mb)
+            </span>
+          ) : filePercentage > 0 && filePercentage < 100 ? (
+            <span className="text-slate-700">{`Uploading ${filePercentage}%`}</span>
+          ) : filePercentage === 100 ? (
+            <span className="text-green-700">Image successfully uploaded!</span>
+          ) : (
+            ""
+          )}
+        </p>
+
         <input
           type="text"
           placeholder="username"
