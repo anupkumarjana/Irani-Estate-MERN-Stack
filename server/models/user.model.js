@@ -16,8 +16,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://t3.ftcdn.net/jpg/05/26/72/46/240_F_526724677_JpExJ4Kd4nsWjXMFHyPPXhKX7G5DLvuF.jpg",
+    },
   },
-  { timestamp:true } //to record the login time we're storing this info
+  { timestamp: true } //to record the login time we're storing this info
 );
 
 const User = mongoose.model("User", userSchema);
